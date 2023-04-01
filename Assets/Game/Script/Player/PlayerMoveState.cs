@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Script.Character;
+using UnityEngine;
 using UnityEngine.TextCore.LowLevel;
 
 namespace Game.Script
@@ -26,7 +27,6 @@ namespace Game.Script
             _rigidbody2D = rigidbody2D;
             _animator = animator;
             _playerEventHandler.OnDashed += Jump;
-
         }
 
         public override void Enter()
@@ -45,6 +45,16 @@ namespace Game.Script
         public override void FixedUpdate()
         {
             _rigidbody2D.velocity = new Vector2(_joystick.Horizontal * _moveSpeed, _rigidbody2D.velocity.y);
+            if (_joystick.Horizontal > 0)
+            {
+                transform.localScale = new Vector3(1, transform.localScale.y, 
+                    transform.localScale.y);
+            }
+            if (_joystick.Horizontal < 0)
+            {
+                transform.localScale = new Vector3(-1, transform.localScale.y,
+                    transform.localScale.z);
+            }
         }
 
         public override void Update()
@@ -75,7 +85,7 @@ namespace Game.Script
         
         private void Attack()
         {
-            _switcher.Switch<PlayerAttackState>();
+            _switcher.Switch<PlayerNoneMoveState>();
         }
     }
 }

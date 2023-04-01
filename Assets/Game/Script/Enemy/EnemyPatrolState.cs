@@ -35,7 +35,7 @@ namespace Game.Script
             var randomChanceToFlip = Random.Range(0, 1);
             if (randomChanceToFlip == 0)
             {
-                Flip();
+                Rotate();
             }
         }
 
@@ -51,18 +51,15 @@ namespace Game.Script
             }
             time -= Time.fixedDeltaTime;
             if (time <= 0) _switcher.Switch<EnemyIdleState>();
-            if (_enemyStats.isOnCliff)
-            {
-                Flip();
-            }
+            if (_enemyStats.isOnCliff) Rotate();
             _rigidbody2D.velocity = new Vector2(_walkSpeed * dir,_rigidbody2D.velocity.y);
         }
 
-        private void Flip()
+        private void Rotate()
         {
-            _enemyTransform.localScale = new Vector3(_enemyTransform.localScale.x * -1,
-                        _enemyTransform.localScale.y, _enemyTransform.localScale.z);
             dir *= -1;
+            _enemyTransform.localScale = new Vector3(_enemyTransform.localScale.x *-1,
+                        _enemyTransform.localScale.y, _enemyTransform.localScale.z);
         }
         
         public override void Update()

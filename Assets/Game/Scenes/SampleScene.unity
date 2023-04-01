@@ -10868,6 +10868,57 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1523513177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2215423001680182582, guid: bf0c38d91e5508443bcfd1b889edded0, type: 3}
+  m_PrefabInstance: {fileID: 2215423000315695631}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1523513178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523513177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e92dc1f9f4b6db47838124eddfe7672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characters:
+  - {fileID: 8539529231778830768, guid: fe4b9e2ac1912de4192907e11c59c0db, type: 3}
+  - {fileID: 8539529231778830768, guid: 2782980b43b9c3d48b8152891e4548fd, type: 3}
+  playerEventHandler: {fileID: 1523513181}
+--- !u!114 &1523513181 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2215423001680182578, guid: bf0c38d91e5508443bcfd1b889edded0, type: 3}
+  m_PrefabInstance: {fileID: 2215423000315695631}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523513177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec481a0d9e73417b956f7a05c936d8cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &1523513186
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523513177}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1531025102
 GameObject:
   m_ObjectHideFlags: 0
@@ -11125,7 +11176,7 @@ GameObject:
   - component: {fileID: 1679281435}
   - component: {fileID: 1679281437}
   - component: {fileID: 1679281436}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Level
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11480,9 +11531,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2215423001680182582, guid: bf0c38d91e5508443bcfd1b889edded0, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 2215423001680182582, guid: bf0c38d91e5508443bcfd1b889edded0, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2215423001680182605, guid: bf0c38d91e5508443bcfd1b889edded0, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1523513186}
     - target: {fileID: 2215423001680182605, guid: bf0c38d91e5508443bcfd1b889edded0, type: 3}
       propertyPath: joystick
       value: 

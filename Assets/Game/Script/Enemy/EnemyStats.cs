@@ -16,7 +16,7 @@ namespace Game.Script
 
         private void FixedUpdate()
         {
-            isOnCliff = !Physics2D.Raycast(_checkCliff.position, Vector2.down,_checkCliffDistance);
+            isOnCliff = !Physics2D.Raycast(_checkCliff.position, Vector2.down,_checkCliffDistance,groundMask);
             isGround = Physics2D.OverlapCircle(_checkGround.position, _checkGroundRadius, groundMask);
         }
 

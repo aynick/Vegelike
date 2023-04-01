@@ -8,6 +8,8 @@ namespace Game.Script
         [SerializeField] private Transform checkGround;
         [SerializeField] private LayerMask groundMask;
         private Rigidbody2D rigidbody2D;
+
+        public bool canMove;
         public bool isGround { private set; get; }
 
         private void Start()

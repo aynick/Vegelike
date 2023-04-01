@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Script.Character;
+using UnityEngine;
 
 namespace Game.Script
 {
@@ -52,7 +53,7 @@ namespace Game.Script
 
         private void Attack()
         {
-            _switcher.Switch<PlayerAttackState>();
+            _switcher.Switch<PlayerNoneMoveState>();
         }
         
     }

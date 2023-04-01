@@ -26,7 +26,7 @@ namespace Game.Script
             { 
 
                 Vector2 targetPlayerPos = player.transform.position;
-                if (targetPlayerPos.y < transform.position.y - 2)
+                if (targetPlayerPos.y < transform.position.y - 1 || targetPlayerPos.y > transform.position.y + 1)
                 {
                     return;
                 }

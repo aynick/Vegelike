@@ -9,10 +9,14 @@ namespace Game.Script
         public event Action OnDashed;
         public event Action OnAttacked;
         public event Action OnInteracted;
+        public event Action<CharacterBase> OnNewCharacterChanged;
+        public event Action OnCharacterChanged;
+        public event Action OnCharacterDestroyed;
 
         [SerializeField] private Button dashBtn;
         [SerializeField] private Button attackBtn;
         [SerializeField] private Button interactBtn;
+        [SerializeField] private Button characterChangeBtn;
         
         private void Start()
         {
@@ -20,6 +24,7 @@ namespace Game.Script
             dashBtn.onClick.AddListener(OnDash);
             attackBtn.onClick.AddListener(OnAttack);
             interactBtn.onClick.AddListener(OnInteract);
+            characterChangeBtn.onClick.AddListener(OnCharacterChange);
         }
 
         private void OnDisable()
@@ -27,6 +32,20 @@ namespace Game.Script
             dashBtn.onClick.RemoveListener(OnDash);
             attackBtn.onClick.RemoveListener(OnAttack);
             interactBtn.onClick.RemoveListener(OnInteract);
+        }
+
+        public void OnCharacterDestroy()
+        {
+            OnCharacterDestroyed?.Invoke();
+        }
+
+        public void OnNewCharacterChange(CharacterBase character)
+        {
+            OnNewCharacterChanged?.Invoke(character);
+        }
+        private void OnCharacterChange()
+        {
+            OnCharacterChanged?.Invoke();
         }
 
         private void OnDash()
@@ -46,9 +65,11 @@ namespace Game.Script
 
         private void InitInput()
         {
-            dashBtn = FindObjectOfType<PlayerCanvas>()._jumpBtn;
-            attackBtn = FindObjectOfType<PlayerCanvas>()._attackBtn;
-            interactBtn = FindObjectOfType<PlayerCanvas>()._interactBtn;
+            var canvas = FindObjectOfType<PlayerCanvas>();
+            characterChangeBtn = canvas._changeCharacterBtn;
+            dashBtn = canvas._jumpBtn;
+            attackBtn = canvas._attackBtn;
+            interactBtn = canvas._interactBtn;
         }
     }
 }

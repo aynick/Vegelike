@@ -14,7 +14,7 @@ TagManager:
   - AttackLayer
   - Player
   - Enemy
-  - 
+  - CameraConfine
   - 
   - 
   - 

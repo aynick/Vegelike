@@ -9,4 +9,5 @@ public class PlayerCanvas : MonoBehaviour
     public Button _attackBtn;
     public Button _jumpBtn;
     public Button _interactBtn;
+    public Button _changeCharacterBtn;
 }

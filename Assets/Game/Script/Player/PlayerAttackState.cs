@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Script.Character;
+using UnityEngine;
 
 namespace Game.Script
 {
@@ -16,6 +17,8 @@ namespace Game.Script
         private PlayerEventHandler _playerEventHandler;
         private Joystick _joystick;
         private Transform _playerTransform;
+
+        private PlayerStats playerStats;
         
         private float _comboTime;
         private float _comboRate = 0.5f;
@@ -27,8 +30,9 @@ namespace Game.Script
         public PlayerAttackState(IStateSwitcher switcher,int attackMaxCount,Animator animator,float attackRate,
             Rigidbody2D rigidbody2D,Transform attackPoint,float attackRadius,LayerMask enemyLayer,
             PlayerEventHandler playerEventHandler,float moveSpeed,Joystick joystick,
-            Transform playerTransform) : base(switcher)
+            Transform playerTransform, PlayerStats playerStats) : base(switcher)
         {
+            this.playerStats = playerStats;
             _playerTransform = playerTransform;
             _joystick = joystick;
             _moveSpeed = moveSpeed / 2;
@@ -44,6 +48,7 @@ namespace Game.Script
 
         public override void Enter()
         {
+            _playerEventHandler.OnCharacterDestroyed += OnDestroy;
             Attack();
             _playerEventHandler.OnDashed += Jump;
             _playerEventHandler.OnAttacked += Attack;
@@ -51,6 +56,8 @@ namespace Game.Script
 
         public override void Exit()
         {
+            _playerEventHandler.OnDashed -= Jump;
+            _playerEventHandler.OnAttacked -= Attack;
         }
 
         public override void FixedUpdate()
@@ -59,8 +66,9 @@ namespace Game.Script
             if (_attackTime <= 0)
             {
                 _attackCount = 0;
-                _switcher.Switch<PlayerIdleState>();
                 _rigidbody2D.velocity = Vector2.zero;
+                playerStats.canMove = true;
+                _switcher.Switch<PlayerNoneAttackState>();
             }
 
             _comboTime -= Time.fixedDeltaTime;
@@ -87,8 +95,8 @@ namespace Game.Script
         {
             if (_comboTime <= 0)
             {
+                playerStats.canMove = false;
                 _rigidbody2D.velocity = Vector2.right * (_joystick.Direction.normalized.x * _moveSpeed);
-                Debug.Log(_rigidbody2D.velocity);
                 if (_attackCount == _attackMaxCount) _attackCount = 0;
                 _attackCount++;
                 _animator.SetTrigger("Attack" + _attackCount);
@@ -99,7 +107,14 @@ namespace Game.Script
 
         private void Jump()
         {
-            _switcher.Switch<PlayerMoveState>();
+            playerStats.canMove = true;
+            _switcher.Switch<PlayerNoneAttackState>();
+        }
+
+        private void OnDestroy()
+        {
+            _playerEventHandler.OnDashed -= Jump;
+            _playerEventHandler.OnAttacked -= Attack;
         }
     }
 }

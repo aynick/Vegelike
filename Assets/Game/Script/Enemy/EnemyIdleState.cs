@@ -10,8 +10,13 @@ namespace Game.Script
         private float maxTime = 4;
         private float minTime = 1;
         private float time;
-        public EnemyIdleState(IStateSwitcher switcher,EnemyPlayerDetect enemyPlayerDetect,Rigidbody2D rigidbody2D,EnemyStats enemyStats) : base(switcher)
+
+        private Animator _animator;
+        
+        public EnemyIdleState(IStateSwitcher switcher,EnemyPlayerDetect enemyPlayerDetect,Rigidbody2D rigidbody2D,
+            EnemyStats enemyStats,Animator animator) : base(switcher)
         {
+            _animator = animator;
             _enemyStats = enemyStats;
             _rigidbody2D = rigidbody2D;
             _playerDetect = enemyPlayerDetect;
@@ -21,21 +26,23 @@ namespace Game.Script
         {
             var randomTime = Random.Range(minTime, maxTime);
             time = randomTime;
+            _animator.SetBool("Idle",true);
         }
 
         public override void Exit()
         {
+            _animator.SetBool("Idle",false);
         }
 
         public override void FixedUpdate()
         {
             _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
             time -= Time.fixedDeltaTime;
-            if (time <= 0 && _playerDetect.closePlayerPos == Vector2.zero)
+            if (time <= 0 && _playerDetect.closePlayer == null)
             {
                 _switcher.Switch<EnemyPatrolState>();
             }
-            if (_playerDetect.closePlayerPos != Vector2.zero && !_enemyStats.isOnCliff && _enemyStats.isGround)
+            if (_playerDetect.closePlayer != null && !_enemyStats.isOnCliff && _enemyStats.isGround)
             { 
                 _switcher.Switch<EnemyChaseState>();
             } 

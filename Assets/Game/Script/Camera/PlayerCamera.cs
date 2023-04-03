@@ -12,4 +12,12 @@ public class PlayerCamera : MonoBehaviour
         var levelLimitCollider = FindObjectOfType<LevelConfig>().levelLimitCollider;
         _cinemachineConfiner.m_BoundingShape2D = levelLimitCollider;
     }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.TryGetComponent(out LevelConfig levelConfig))
+        {
+            _cinemachineConfiner.m_BoundingShape2D = other;
+        }
+    }
 }

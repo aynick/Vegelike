@@ -1,7 +1,7 @@
 ﻿using Game.Script.Character;
 using UnityEngine;
 
-namespace Game.Script
+namespace Game.Script.Player.States
 {
     public class PlayerIdleState : StateBase
     {
@@ -24,11 +24,13 @@ namespace Game.Script
         public override void Enter()
         {
             _playerEventHandler.OnAttacked += Attack;
+            _playerEventHandler.OnAppliedDamage += OnDamaged;
             _animator.SetBool("Idle",true);
         }
 
         public override void Exit()
         {
+            _playerEventHandler.OnAppliedDamage -= OnDamaged;
             _playerEventHandler.OnAttacked -= Attack;
             _animator.SetBool("Idle",false);
         }
@@ -56,5 +58,9 @@ namespace Game.Script
             _switcher.Switch<PlayerNoneMoveState>();
         }
         
+        private void OnDamaged(int damage)
+        {
+            _switcher.Switch<PlayerDamagedState>();
+        }
     }
 }

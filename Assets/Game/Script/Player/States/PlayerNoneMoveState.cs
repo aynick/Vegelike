@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Script.Character
+namespace Game.Script.Player.States
 {
     public class PlayerNoneMoveState : StateBase
     {
@@ -16,11 +16,12 @@ namespace Game.Script.Character
 
         public override void Enter()
         {
-            
+            playerEventHandler.OnAppliedDamage += OnDamaged;
         }
 
         public override void Exit()
         {
+            playerEventHandler.OnAppliedDamage -= OnDamaged;
         }
 
         public override void FixedUpdate()
@@ -38,6 +39,11 @@ namespace Game.Script.Character
         private void Jump()
         {
             _switcher.Switch<PlayerMoveState>();
+        }
+        
+        private void OnDamaged(int damage)
+        {
+            _switcher.Switch<PlayerDamagedState>();
         }
     }
 }

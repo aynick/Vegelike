@@ -15,16 +15,19 @@ namespace Game.Script
         [SerializeField] private float _walkSpeed;
         [SerializeField] private float _runSpeed;
         [SerializeField] private EnemyStats enemyStats;
-
+        [SerializeField] private float attackRate;
+        [SerializeField] private float attackRange;
+        [SerializeField] private int attackDamage;
+        [SerializeField] private Animator animator;
 
         private void Start()
         {
             allStates = new List<StateBase>()
             {
-                new EnemyIdleState(this,_enemyPlayerDetect,_rigidbody2D,enemyStats),
-                new EnemyChaseState(this,_enemyPlayerDetect,_rigidbody2D,_runSpeed,transform,enemyStats),
-                new EnemyPatrolState(this,_rigidbody2D,_walkSpeed,enemyStats,transform,_enemyPlayerDetect),
-                new EnemyAttackState(this)
+                new EnemyIdleState(this,_enemyPlayerDetect,_rigidbody2D,enemyStats,animator),
+                new EnemyChaseState(this,_enemyPlayerDetect,_rigidbody2D,_runSpeed,transform,enemyStats,animator),
+                new EnemyPatrolState(this,_rigidbody2D,_walkSpeed,enemyStats,transform,_enemyPlayerDetect,animator),
+                new EnemyAttackState(this,_enemyPlayerDetect,attackRate,attackDamage,attackRange,animator,transform)
             };
             currentState = allStates[0];
             currentState.Enter();

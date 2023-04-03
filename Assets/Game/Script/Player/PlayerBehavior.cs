@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Script;
-using Game.Script.Character;
+using Game.Script.Player.States;
 using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
@@ -14,7 +14,6 @@ public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
     [SerializeField] public int moveSpeed;
     [SerializeField] private int jumpForce;
     
-    
     [SerializeField] public PlayerEventHandler playerEventHandler;
     [SerializeField] public Animator animator;
     [SerializeField] public Rigidbody2D rigidbody2D;
@@ -22,13 +21,19 @@ public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
     [SerializeField] private Transform playerBody;
     [SerializeField] public PlayerStats playerStats;
 
-    
+    [SerializeField] public int _healthPoint;
     
     private void Start()
     {
+        InitVars();
         playerEventHandler.OnNewCharacterChanged += ChangeVars;
         InitInput();
         InitStates();
+    }
+
+    private void InitVars()
+    {
+        playerStats.ExternalInit(_healthPoint);
     }
 
     private void InitInput()
@@ -49,7 +54,8 @@ public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
             new PlayerMoveState(this,joystick,rigidbody2D,animator,moveSpeed,playerBody,jumpForce,
                 playerEventHandler,playerStats),
             new PlayerIdleState(this,playerEventHandler,animator,joystick,playerStats,rigidbody2D),
-            new PlayerNoneMoveState(this,playerEventHandler,playerStats)
+            new PlayerNoneMoveState(this,playerEventHandler,playerStats),
+            new PlayerDamagedState(this,0.7f,playerStats,animator)
         };
         currentState = allStates[0];
         currentState.Enter();
@@ -58,8 +64,6 @@ public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
     private void FixedUpdate()
     {
         currentState.FixedUpdate();
-        
-        
     }
 
     private void Update()

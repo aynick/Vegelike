@@ -146,10 +146,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22583449131e4b5291313e39a8a5b569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   attackPoint: {fileID: 3083438604957699799}
   attackRadius: 1
   attackLayer:
     serializedVersion: 2
     m_Bits: 320
-  attackMaxCount: 2
+  attackMaxCount: 3
   attackRate: 0.7

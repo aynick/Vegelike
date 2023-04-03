@@ -10,31 +10,35 @@ namespace Game.Script
         [SerializeField] private LayerMask playerLayer;
         private float _minDistance = Mathf.Infinity;
 
-        public Vector2 closePlayerPos { private set; get; }
-        
+        public PlayerBehavior closePlayer { private set; get; }
+        private Vector2 closePlayerPos = Vector2.zero;
+
         private void Start()
         {
-            closePlayerPos = Vector2.zero;
+            closePlayer = null;
         }
 
         private void FixedUpdate()
         {
             _minDistance = Mathf.Infinity;
+            closePlayer = null;
             closePlayerPos = Vector2.zero;
             var players = Physics2D.OverlapCircleAll(_playerDetect.position, _playerDetectRadius,playerLayer);
-            foreach (var player in players) 
-            { 
-
-                Vector2 targetPlayerPos = player.transform.position;
-                if (targetPlayerPos.y < transform.position.y - 1 || targetPlayerPos.y > transform.position.y + 1)
+            foreach (var player in players)
+            {
+                player.TryGetComponent(out PlayerBehavior playerBehavior);
+                if (playerBehavior == null) return;
+                var targetPlayerPos = playerBehavior;
+                if (targetPlayerPos.transform.position.y < transform.position.y - 1 || targetPlayerPos.transform.position.y > transform.position.y + 1)
                 {
                     return;
                 }
-                float distance = Vector2.Distance(closePlayerPos, targetPlayerPos); 
+                float distance = Vector2.Distance(closePlayerPos, targetPlayerPos.transform.position); 
                 if (Mathf.Round(distance) < Mathf.Round(_minDistance)) 
                 { 
                     _minDistance = distance; 
-                    closePlayerPos = targetPlayerPos;
+                    closePlayer = targetPlayerPos;
+                    closePlayerPos = targetPlayerPos.transform.position;
                 }
             }
         }

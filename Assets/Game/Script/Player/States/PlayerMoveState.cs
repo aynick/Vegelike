@@ -1,4 +1,5 @@
 ﻿using Game.Script.Character;
+using Game.Script.Player.States;
 using UnityEngine;
 using UnityEngine.TextCore.LowLevel;
 
@@ -32,12 +33,14 @@ namespace Game.Script
         public override void Enter()
         {
             _playerEventHandler.OnAttacked += Attack;
+            _playerEventHandler.OnAppliedDamage += OnDamaged;
             _animator.SetBool("Move",true);
         }
 
         public override void Exit()
         {
             _playerEventHandler.OnAttacked -= Attack;
+            _playerEventHandler.OnAppliedDamage -= OnDamaged;
             _animator.SetBool("Jump",false);
             _animator.SetBool("Move",false);
         }
@@ -86,6 +89,11 @@ namespace Game.Script
         private void Attack()
         {
             _switcher.Switch<PlayerNoneMoveState>();
+        }
+
+        private void OnDamaged(int damage)
+        {
+            _switcher.Switch<PlayerDamagedState>();
         }
     }
 }

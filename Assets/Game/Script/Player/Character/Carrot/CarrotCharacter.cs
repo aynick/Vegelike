@@ -22,7 +22,7 @@ namespace Game.Script.Character
                 attackLayer,playerEventHandler,moveSpeed,joystick,transform,playerStats);
             allStates = new List<StateBase>()
             {
-                new PlayerNoneAttackState(this,playerEventHandler),
+                new PlayerNoneAttackState(this,playerEventHandler,playerStats),
                 attackState
             };
             currentState = allStates[0];

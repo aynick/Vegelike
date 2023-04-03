@@ -12,6 +12,11 @@ namespace Game.Script
         public event Action<CharacterBase> OnNewCharacterChanged;
         public event Action OnCharacterChanged;
         public event Action OnCharacterDestroyed;
+        
+        //
+        
+        public event Action<int> OnAppliedDamage;
+        public event Action<int> OnHealthPointChanged;
 
         [SerializeField] private Button dashBtn;
         [SerializeField] private Button attackBtn;
@@ -37,6 +42,16 @@ namespace Game.Script
         public void OnCharacterDestroy()
         {
             OnCharacterDestroyed?.Invoke();
+        }
+
+        public void OnHealthPointChange(int hp)
+        {
+            OnHealthPointChanged?.Invoke(hp);
+        }
+
+        public void OnApplyDamage(int damage)
+        {
+            OnAppliedDamage?.Invoke(damage);
         }
 
         public void OnNewCharacterChange(CharacterBase character)

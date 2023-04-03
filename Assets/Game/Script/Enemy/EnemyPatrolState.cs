@@ -15,11 +15,12 @@ namespace Game.Script
         private float time;
         private float maxTime = 4;
         private float minTime = 1;
-
+        private Animator _animator;
         private float dir = 1;
         public EnemyPatrolState(IStateSwitcher switcher,Rigidbody2D rigidbody2D,float walkSpeed,EnemyStats enemyStats,
-            Transform enemyTransform,EnemyPlayerDetect playerDetect) : base(switcher)
+            Transform enemyTransform,EnemyPlayerDetect playerDetect,Animator animator) : base(switcher)
         {
+            _animator = animator;
             _playerDetect = playerDetect;
             _enemyTransform = enemyTransform;
             _enemyStats = enemyStats;
@@ -31,7 +32,7 @@ namespace Game.Script
         {
             var randomTime = Random.Range(minTime, maxTime);
             time = randomTime;
-
+            _animator.SetBool("Move",true);
             var randomChanceToFlip = Random.Range(0, 1);
             if (randomChanceToFlip == 0)
             {
@@ -41,11 +42,12 @@ namespace Game.Script
 
         public override void Exit()
         {
+            _animator.SetBool("Move",false);
         }
 
         public override void FixedUpdate()
         {
-            if (_playerDetect.closePlayerPos != Vector2.zero)
+            if (_playerDetect.closePlayer != null)
             {
                 _switcher.Switch<EnemyChaseState>();
             }

@@ -4,14 +4,18 @@ namespace Game.Script.Character
 {
     public class PlayerNoneAttackState : StateBase
     {
+        private PlayerStats _playerStats;
         private PlayerEventHandler playerEventHandler;
-        public PlayerNoneAttackState(IStateSwitcher switcher,PlayerEventHandler playerEventHandler) : base(switcher)
+        public PlayerNoneAttackState(IStateSwitcher switcher,PlayerEventHandler playerEventHandler,
+            PlayerStats playerStats) : base(switcher)
         {
+            _playerStats = playerStats;
             this.playerEventHandler = playerEventHandler;
         }
 
         private void Attack()
         {
+            if (_playerStats.isInvulnerable) return;
             _switcher.Switch<PlayerAttackState>();
         }
 

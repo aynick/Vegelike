@@ -49,6 +49,7 @@ namespace Game.Script
         public override void Enter()
         {
             _playerEventHandler.OnCharacterDestroyed += OnDestroy;
+            _playerEventHandler.OnAppliedDamage += OnDamaged;
             Attack();
             _playerEventHandler.OnDashed += Jump;
             _playerEventHandler.OnAttacked += Attack;
@@ -56,6 +57,7 @@ namespace Game.Script
 
         public override void Exit()
         {
+            _playerEventHandler.OnAppliedDamage -= OnDamaged;
             _playerEventHandler.OnDashed -= Jump;
             _playerEventHandler.OnAttacked -= Attack;
         }
@@ -115,6 +117,11 @@ namespace Game.Script
         {
             _playerEventHandler.OnDashed -= Jump;
             _playerEventHandler.OnAttacked -= Attack;
+        }
+        
+        private void OnDamaged(int damage)
+        {
+            _switcher.Switch<PlayerNoneAttackState>();
         }
     }
 }

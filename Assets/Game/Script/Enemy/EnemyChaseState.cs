@@ -9,10 +9,12 @@ namespace Game.Script
         private float _runSpeed;
         private Transform _enemyTransform;
         private EnemyStats _enemyStats;
+        private Animator _animator;
         
         public EnemyChaseState(IStateSwitcher switcher,EnemyPlayerDetect playerDetect,Rigidbody2D rigidbody2D,float runSpeed,
-            Transform enemyTransform,EnemyStats enemyStats) : base(switcher)
+            Transform enemyTransform,EnemyStats enemyStats,Animator animator) : base(switcher)
         {
+            _animator = animator;
             _enemyStats = enemyStats;
             _enemyTransform = enemyTransform;
             _runSpeed = runSpeed;
@@ -22,15 +24,17 @@ namespace Game.Script
 
         public override void Enter()
         {
+            _animator.SetBool("Move",true);
         }
 
         public override void Exit()
         {
+            _animator.SetBool("Move",false);
         }
 
         public override void FixedUpdate()
         {
-            if (_playerDetect.closePlayerPos == Vector2.zero)
+            if (_playerDetect.closePlayer == null)
             {
                 _switcher.Switch<EnemyIdleState>();
             }
@@ -38,8 +42,11 @@ namespace Game.Script
             {
                 _switcher.Switch<EnemyIdleState>();
             }
+
+            float dir = 0;
+            if (_playerDetect.closePlayer != null) dir = _playerDetect.closePlayer.transform.position.x - _enemyTransform.position.x;
+            else _switcher.Switch<EnemyIdleState>();
             
-            var dir = _playerDetect.closePlayerPos.x - _enemyTransform.position.x;
             dir = Mathf.Clamp(dir, -1, 1);
             if (dir < 0)
             {
@@ -52,10 +59,15 @@ namespace Game.Script
                     _enemyTransform.localScale.y, _enemyTransform.localScale.z);
             }
 
-            if (Vector2.Distance(_playerDetect.closePlayerPos, _enemyTransform.position) < 2)
+            if (_playerDetect.closePlayer != null)
             {
-                return;
+                if (Vector2.Distance(_playerDetect.closePlayer.transform.position, _enemyTransform.position) < 2)
+                {
+                    _switcher.Switch<EnemyAttackState>();
+                }
             }
+            else _switcher.Switch<EnemyIdleState>();
+
             _rigidbody2D.velocity = new Vector2(dir * _runSpeed,_rigidbody2D.velocity.y);
         }
         

@@ -129,6 +129,7 @@ GameObject:
   - component: {fileID: 2215423000555683109}
   - component: {fileID: 4502734527331824900}
   - component: {fileID: 80533913615068327}
+  - component: {fileID: 4183938998502120317}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: Untagged
@@ -216,6 +217,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cinemachineConfiner: {fileID: 4502734527331824900}
+--- !u!58 &4183938998502120317
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2215423000555683111}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &2215423000834583155
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,6 +399,7 @@ GameObject:
   - component: {fileID: 2215423001680182607}
   - component: {fileID: 2215423001680182606}
   - component: {fileID: 2215423001680182605}
+  - component: {fileID: 6151361976657202906}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -458,6 +476,7 @@ MonoBehaviour:
   dashBtn: {fileID: 0}
   attackBtn: {fileID: 0}
   interactBtn: {fileID: 0}
+  characterChangeBtn: {fileID: 0}
 --- !u!114 &2215423001680182607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,7 +493,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 8
+  playerEventHandler: {fileID: 0}
   canMove: 0
+  isInvulnerable: 0
 --- !u!114 &2215423001680182606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,4 +528,19 @@ MonoBehaviour:
   rigidbody2D: {fileID: 2215423001680182580}
   joystick: {fileID: 0}
   playerBody: {fileID: 2215423001680182579}
+  playerStats: {fileID: 2215423001680182607}
+  _healthPoint: 12
+--- !u!114 &6151361976657202906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2215423001680182582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0577e0ea1169fbc40b3b9681728d5de1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerEventHandler: {fileID: 2215423001680182578}
   playerStats: {fileID: 2215423001680182607}

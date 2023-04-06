@@ -5,6 +5,7 @@ namespace Game.Script
     public class EnemyAttackState : StateBase
     {
         private EnemyPlayerDetect _playerDetect;
+        private EnemyEventHandler _enemyEventHandler;
         private float _attackRate;
         private float _attackTime = 0;
         private int _damage;
@@ -13,8 +14,9 @@ namespace Game.Script
         private Transform _enemyTransform;
         
         public EnemyAttackState(IStateSwitcher switcher,EnemyPlayerDetect playerDetect,float attackRate,int damage,
-            float attackRange,Animator animator,Transform enemyTransform) : base(switcher)
+            float attackRange,Animator animator,Transform enemyTransform,EnemyEventHandler enemyEventHandler) : base(switcher)
         {
+            _enemyEventHandler = enemyEventHandler;
             _enemyTransform = enemyTransform;
             _animator = animator;
             _attackRange = attackRange;
@@ -25,12 +27,15 @@ namespace Game.Script
 
         public override void Enter()
         {
+            _enemyEventHandler.OnDestroyed += OnDestroy;
+            _enemyEventHandler.OnAppliedDamage += OnDamaged;
             _attackTime = _attackRate;
         }
 
         public override void Exit()
         {
-            _animator.SetBool("Attack",false);
+            _enemyEventHandler.OnDestroyed -= OnDestroy;
+            _enemyEventHandler.OnAppliedDamage -= OnDamaged;
         }
 
         public override void FixedUpdate()
@@ -70,6 +75,17 @@ namespace Game.Script
                 _animator.SetTrigger("Attack");
                 _attackTime = _attackRate;
             }
+        }
+
+        private void OnDamaged(int dmg)
+        {
+            _switcher.Switch<EnemyDamagedState>();
+        }
+        
+        private void OnDestroy()
+        {
+            _enemyEventHandler.OnDestroyed -= OnDestroy;
+            _enemyEventHandler.OnAppliedDamage -= OnDamaged;
         }
     }
 }

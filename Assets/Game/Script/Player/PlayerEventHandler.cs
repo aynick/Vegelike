@@ -16,7 +16,9 @@ namespace Game.Script
         //
         
         public event Action<int> OnAppliedDamage;
-        public event Action<int> OnHealthPointChanged;
+        public event Action<int,int> OnHealthPointChanged;
+
+        public event Action OnDisabled;
 
         [SerializeField] private Button dashBtn;
         [SerializeField] private Button attackBtn;
@@ -34,6 +36,7 @@ namespace Game.Script
 
         private void OnDisable()
         {
+            OnDisabled?.Invoke();
             dashBtn.onClick.RemoveListener(OnDash);
             attackBtn.onClick.RemoveListener(OnAttack);
             interactBtn.onClick.RemoveListener(OnInteract);
@@ -44,9 +47,9 @@ namespace Game.Script
             OnCharacterDestroyed?.Invoke();
         }
 
-        public void OnHealthPointChange(int hp)
+        public void OnHealthPointChange(int hp,int maxHp)
         {
-            OnHealthPointChanged?.Invoke(hp);
+            OnHealthPointChanged?.Invoke(hp,maxHp);
         }
 
         public void OnApplyDamage(int damage)

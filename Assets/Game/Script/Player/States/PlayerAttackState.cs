@@ -18,21 +18,26 @@ namespace Game.Script
         private Joystick _joystick;
         private Transform _playerTransform;
 
-        private PlayerStats playerStats;
+        private PlayerInfo playerInfo;
         
         private float _comboTime;
         private float _comboRate = 0.5f;
         
         private float _moveSpeed;
 
+        private int _damage;
+        private int _knockbackForce;
+
         public bool canAttack;
         
         public PlayerAttackState(IStateSwitcher switcher,int attackMaxCount,Animator animator,float attackRate,
             Rigidbody2D rigidbody2D,Transform attackPoint,float attackRadius,LayerMask enemyLayer,
             PlayerEventHandler playerEventHandler,float moveSpeed,Joystick joystick,
-            Transform playerTransform, PlayerStats playerStats) : base(switcher)
+            Transform playerTransform, PlayerInfo playerInfo,int damage,int knockbackForce) : base(switcher)
         {
-            this.playerStats = playerStats;
+            _knockbackForce = knockbackForce;
+            _damage = damage;
+            this.playerInfo = playerInfo;
             _playerTransform = playerTransform;
             _joystick = joystick;
             _moveSpeed = moveSpeed / 2;
@@ -48,15 +53,18 @@ namespace Game.Script
 
         public override void Enter()
         {
-            _playerEventHandler.OnCharacterDestroyed += OnDestroy;
+            _playerEventHandler.OnDisabled += OnDisable;
+            _playerEventHandler.OnCharacterDestroyed += OnDisable;
             _playerEventHandler.OnAppliedDamage += OnDamaged;
-            Attack();
             _playerEventHandler.OnDashed += Jump;
             _playerEventHandler.OnAttacked += Attack;
+            Attack();
         }
 
         public override void Exit()
         {
+            _playerEventHandler.OnDisabled -= OnDisable;
+            _playerEventHandler.OnCharacterDestroyed -= OnDisable;
             _playerEventHandler.OnAppliedDamage -= OnDamaged;
             _playerEventHandler.OnDashed -= Jump;
             _playerEventHandler.OnAttacked -= Attack;
@@ -69,7 +77,7 @@ namespace Game.Script
             {
                 _attackCount = 0;
                 _rigidbody2D.velocity = Vector2.zero;
-                playerStats.canMove = true;
+                playerInfo.canMove = true;
                 _switcher.Switch<PlayerNoneAttackState>();
             }
 
@@ -80,9 +88,9 @@ namespace Game.Script
                 foreach (var collider in colliders)
                 {
                     collider.TryGetComponent(out EnemyDamagable enemyDamagable);
-                    enemyDamagable.ApplyDamage();
+                    enemyDamagable.ApplyDamage(_damage);
                     enemyDamagable.TryGetComponent(out Rigidbody2D rigidbody2D);
-                    rigidbody2D.velocity = new Vector2((enemyDamagable.transform.position - _playerTransform.position).normalized.x * 70,
+                    rigidbody2D.velocity = new Vector2((enemyDamagable.transform.position - _playerTransform.position).normalized.x * _knockbackForce,
                          rigidbody2D.velocity.y);
                 }
                 canAttack = false;
@@ -97,7 +105,7 @@ namespace Game.Script
         {
             if (_comboTime <= 0)
             {
-                playerStats.canMove = false;
+                playerInfo.canMove = false;
                 _rigidbody2D.velocity = Vector2.right * (_joystick.Direction.normalized.x * _moveSpeed);
                 if (_attackCount == _attackMaxCount) _attackCount = 0;
                 _attackCount++;
@@ -109,19 +117,23 @@ namespace Game.Script
 
         private void Jump()
         {
-            playerStats.canMove = true;
+            playerInfo.canMove = true;
             _switcher.Switch<PlayerNoneAttackState>();
         }
 
-        private void OnDestroy()
-        {
-            _playerEventHandler.OnDashed -= Jump;
-            _playerEventHandler.OnAttacked -= Attack;
-        }
         
         private void OnDamaged(int damage)
         {
             _switcher.Switch<PlayerNoneAttackState>();
+        }
+
+        private void OnDisable()
+        {
+            _playerEventHandler.OnDisabled -= OnDisable;
+            _playerEventHandler.OnCharacterDestroyed -= OnDisable;
+            _playerEventHandler.OnAppliedDamage -= OnDamaged;
+            _playerEventHandler.OnDashed -= Jump;
+            _playerEventHandler.OnAttacked -= Attack;
         }
     }
 }

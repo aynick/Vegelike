@@ -4,29 +4,32 @@ namespace Game.Script.Player.States
 {
     public class PlayerDamagedState : StateBase
     {
-        private PlayerStats _playerStats;
+        private PlayerInfo playerInfo;
         private float _stanTime;
         private float _time;
         private Animator _animator;
+        private Rigidbody2D _rigidbody2D;
         
-        public PlayerDamagedState(IStateSwitcher switcher,float stanTime,PlayerStats playerStats,
-            Animator animator) : base(switcher)
+        public PlayerDamagedState(IStateSwitcher switcher,float stanTime,PlayerInfo playerInfo,
+            Animator animator,Rigidbody2D rigidbody2D) : base(switcher)
         {
+            _rigidbody2D = rigidbody2D;
             _animator = animator;
-            _playerStats = playerStats;
+            this.playerInfo = playerInfo;
             _stanTime = stanTime;
         }
 
         public override void Enter()
         {
+            _rigidbody2D.velocity = Vector2.zero;
             _time = _stanTime;
-            _playerStats.isInvulnerable = true;
+            playerInfo.isInvulnerable = true;
             _animator.SetTrigger("Hurt");
         }
 
         public override void Exit()
         {
-            _playerStats.isInvulnerable = false;
+            playerInfo.isInvulnerable = false;
         }
 
         public override void FixedUpdate()

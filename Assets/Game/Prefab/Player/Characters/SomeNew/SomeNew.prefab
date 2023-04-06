@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5293270756878652748}
   - component: {fileID: 8539529231778830768}
   m_Layer: 0
-  m_Name: Carrot
+  m_Name: SomeNew
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,7 +104,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 6919306283042337503, guid: e7106f5c226ba3a4ba3dee3e5f3755ec, type: 3}
+  m_Sprite: {fileID: 8904223869535287090, guid: 0fac4c8332d4f754d89734f873027fec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -125,7 +125,7 @@ Animator:
   m_GameObject: {fileID: 3083438605919316011}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 994d26df04501e346b9828f16923ac21, type: 2}
+  m_Controller: {fileID: 9100000, guid: 0580f30ba62249349961a37512eb4ee0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -146,11 +146,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22583449131e4b5291313e39a8a5b569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 5293270756878652748}
   attackPoint: {fileID: 3083438604957699799}
   attackRadius: 1
   attackLayer:
     serializedVersion: 2
     m_Bits: 320
-  attackMaxCount: 3
+  playerStatsData: {fileID: 11400000, guid: 2829dba92a36a8841bc707cee7f8be38, type: 2}
+  attackMaxCount: 2
   attackRate: 0.7

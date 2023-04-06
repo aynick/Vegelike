@@ -9,7 +9,7 @@ namespace Game.Script
         private PlayerEventHandler playerEventHandler;
         [SerializeField] private Slider healthPoint;
 
-        private void OnEnable()
+        private void Start()
         {
             playerEventHandler = FindObjectOfType<PlayerEventHandler>();
             playerEventHandler.OnHealthPointChanged += RenderHealthPoint;
@@ -19,7 +19,6 @@ namespace Game.Script
         private void Init()
         {
             var playerBeh = FindObjectOfType<PlayerBehavior>();
-            healthPoint.maxValue = playerBeh._healthPoint;
         }
 
         private void OnDisable()
@@ -27,8 +26,9 @@ namespace Game.Script
             playerEventHandler.OnHealthPointChanged -= RenderHealthPoint;
         }
 
-        private void RenderHealthPoint(int hp)
+        private void RenderHealthPoint(int hp,int maxHp)
         {
+            healthPoint.maxValue = maxHp;
             healthPoint.value = hp;
         }
     }

@@ -1,53 +1,44 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Script
 {
-    public class PlayerStats : MonoBehaviour
+    public class PlayerStats
     {
-        [SerializeField] private Transform checkGround;
-        [SerializeField] private LayerMask groundMask;
-        [SerializeField] private PlayerEventHandler playerEventHandler;
-        private Rigidbody2D rigidbody2D;
-        private int healthPoint;
+        private PlayerEventHandler _playerEventHandler;
+        private PlayerStatsData _playerStatsData;
+        //stats
+        public int moveSpeed { private set; get; }
+        public int damage { private set; get; }
+        public int jumpForce { private set; get; }
+        public float playerStanTime { private set; get; }
+        public float attackRate { private set; get; }
+        public int attackMaxCount { private set; get; }
+        public int knockbackForce { private set; get; }
 
-        public bool canMove;
-        public bool isInvulnerable;
-        public bool isGround { private set; get; }
-
-        public void ExternalInit(int hp)
+        public PlayerStats(PlayerStatsData playerStatsData,PlayerEventHandler playerEventHandler)
         {
-            healthPoint = hp;
+            _playerStatsData = playerStatsData; 
+            _playerEventHandler = playerEventHandler;
+            OnEnable();
         }
 
-        private void ApplyDamage(int damage)
+        private void OnEnable()
         {
-            if (healthPoint - damage <= 0)
-            {
-                healthPoint = 0;
-                Die();
-                playerEventHandler.OnHealthPointChange(healthPoint);
-                return;
-            }
-            healthPoint -= damage;
-            playerEventHandler.OnHealthPointChange(healthPoint);
+            _playerEventHandler.OnDisabled += OnDisable;
+            _playerEventHandler.OnCharacterDestroyed += OnDisable;
+            damage = _playerStatsData.damage;
+            knockbackForce = _playerStatsData.knockbackForce;
+            attackMaxCount = _playerStatsData.attackMaxCount;
+            attackRate = _playerStatsData.attackRate;
+            moveSpeed = _playerStatsData.moveSpeed;
+            jumpForce = _playerStatsData.jumpForce;
+            playerStanTime = _playerStatsData.playerStanTime;
         }
 
-        private void Die()
-        {
-            Debug.Log("Player is dead");
-        }
-
-        private void Start()
-        {
-            playerEventHandler.OnAppliedDamage += ApplyDamage;
-            rigidbody2D = GetComponent<Rigidbody2D>();
-        }
-
-        private void FixedUpdate()
-        {
-            isGround = Physics2D.OverlapCircle(checkGround.position, 0.1f, groundMask);
-            if (rigidbody2D.velocity.normalized == Vector2.up) isGround = false;
+        private void OnDisable()
+        {            
+            _playerEventHandler.OnCharacterDestroyed -= OnDisable;
+            _playerEventHandler.OnDisabled -= OnDisable;
         }
     }
 }

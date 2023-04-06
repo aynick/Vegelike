@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerCharacterChange : MonoBehaviour
 {
     public CharacterBase[] characters = new CharacterBase[2];
+    private CharacterBase[] spawnedCharacters = new CharacterBase[2];
     [SerializeField] private PlayerEventHandler playerEventHandler;
     private CharacterBase spawnedCharacter;
     private int currentCharacterIndex = 0;
@@ -17,9 +18,9 @@ public class PlayerCharacterChange : MonoBehaviour
         SpawnCharacter(currentCharacterIndex);
     }
 
-    private void SpawnCharacter(int index)
-    {
-        spawnedCharacter = Instantiate(characters[index], transform);
+    private void SpawnCharacter(int i)
+    { 
+        spawnedCharacter = Instantiate(characters[i], transform);
     }
 
     private void ChangeCharacter()

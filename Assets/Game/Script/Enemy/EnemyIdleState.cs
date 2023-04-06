@@ -5,25 +5,30 @@ namespace Game.Script
     {
         private EnemyPlayerDetect _playerDetect;
         private Rigidbody2D _rigidbody2D;
-        private EnemyStats _enemyStats;
+        private EnemyInfo enemyInfo;
         
         private float maxTime = 4;
         private float minTime = 1;
         private float time;
 
         private Animator _animator;
+
+        private EnemyEventHandler _enemyEventHandler;
         
         public EnemyIdleState(IStateSwitcher switcher,EnemyPlayerDetect enemyPlayerDetect,Rigidbody2D rigidbody2D,
-            EnemyStats enemyStats,Animator animator) : base(switcher)
+            EnemyInfo enemyInfo,Animator animator,EnemyEventHandler enemyEventHandler) : base(switcher)
         {
+            _enemyEventHandler = enemyEventHandler;
             _animator = animator;
-            _enemyStats = enemyStats;
+            this.enemyInfo = enemyInfo;
             _rigidbody2D = rigidbody2D;
             _playerDetect = enemyPlayerDetect;
         }
 
         public override void Enter()
         {
+            _enemyEventHandler.OnDestroyed += OnDestroy;
+            _enemyEventHandler.OnAppliedDamage += OnDamaged;
             var randomTime = Random.Range(minTime, maxTime);
             time = randomTime;
             _animator.SetBool("Idle",true);
@@ -31,6 +36,8 @@ namespace Game.Script
 
         public override void Exit()
         {
+            _enemyEventHandler.OnDestroyed -= OnDestroy;
+            _enemyEventHandler.OnAppliedDamage -= OnDamaged;
             _animator.SetBool("Idle",false);
         }
 
@@ -42,7 +49,7 @@ namespace Game.Script
             {
                 _switcher.Switch<EnemyPatrolState>();
             }
-            if (_playerDetect.closePlayer != null && !_enemyStats.isOnCliff && _enemyStats.isGround)
+            if (_playerDetect.closePlayer != null && !enemyInfo.isOnCliff && enemyInfo.isGround)
             { 
                 _switcher.Switch<EnemyChaseState>();
             } 
@@ -52,6 +59,16 @@ namespace Game.Script
         public override void Update()
         {
             
+        }
+        private void OnDamaged(int dmg)
+        {
+            _switcher.Switch<EnemyDamagedState>();
+        }
+
+        private void OnDestroy()
+        {
+            _enemyEventHandler.OnDestroyed -= OnDestroy;
+            _enemyEventHandler.OnAppliedDamage -= OnDamaged;
         }
     }
 }

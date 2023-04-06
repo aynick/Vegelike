@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 5003981268223562011}
   - component: {fileID: 5003981268223561988}
   - component: {fileID: 5003981268223561989}
+  - component: {fileID: 9127965942646793026}
   m_Layer: 8
   m_Name: Enemy (1)
   m_TagString: Untagged
@@ -105,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0480df214a05f04b9c78b835a604702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyEventHandler: {fileID: 9127965942646793026}
   animator: {fileID: 5003981268223562010}
 --- !u!61 &5003981268223562008
 BoxCollider2D:
@@ -188,11 +190,14 @@ MonoBehaviour:
   _rigidbody2D: {fileID: 5003981268223562009}
   _walkSpeed: 2
   _runSpeed: 3
-  enemyStats: {fileID: 5003981268223561988}
-  attackRate: 2
+  enemyInfo: {fileID: 0}
+  attackRate: 1
   attackRange: 2
   attackDamage: 2
   animator: {fileID: 5003981268223562010}
+  enemyEventHandler: {fileID: 9127965942646793026}
+  stanTime: 0.2
+  healthPoint: 12
 --- !u!114 &5003981268223561988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +234,18 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &9127965942646793026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5003981268223561990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9422a0896dc42b2af4166f14e895048, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5003981269467775371
 GameObject:
   m_ObjectHideFlags: 0

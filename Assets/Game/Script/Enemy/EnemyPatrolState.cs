@@ -4,32 +4,35 @@ namespace Game.Script
 {
     public class EnemyPatrolState : StateBase
     {
-        private Transform _firstPoint;
         
         private Rigidbody2D _rigidbody2D;
         private float _walkSpeed;
-        private EnemyStats _enemyStats;
+        private EnemyInfo enemyInfo;
         private Transform _enemyTransform;
         private EnemyPlayerDetect _playerDetect;
-
+        private EnemyEventHandler _enemyEventHandler;
+        
         private float time;
         private float maxTime = 4;
         private float minTime = 1;
         private Animator _animator;
         private float dir = 1;
-        public EnemyPatrolState(IStateSwitcher switcher,Rigidbody2D rigidbody2D,float walkSpeed,EnemyStats enemyStats,
-            Transform enemyTransform,EnemyPlayerDetect playerDetect,Animator animator) : base(switcher)
+        public EnemyPatrolState(IStateSwitcher switcher,Rigidbody2D rigidbody2D,float walkSpeed,EnemyInfo enemyInfo,
+            Transform enemyTransform,EnemyPlayerDetect playerDetect,Animator animator,EnemyEventHandler enemyEventHandler) : base(switcher)
         {
+            _enemyEventHandler = enemyEventHandler;
             _animator = animator;
             _playerDetect = playerDetect;
             _enemyTransform = enemyTransform;
-            _enemyStats = enemyStats;
+            this.enemyInfo = enemyInfo;
             _rigidbody2D = rigidbody2D;
             _walkSpeed = walkSpeed;
         }
 
         public override void Enter()
         {
+            _enemyEventHandler.OnAppliedDamage += OnDamaged;
+            _enemyEventHandler.OnDestroyed += OnDestroy;
             var randomTime = Random.Range(minTime, maxTime);
             time = randomTime;
             _animator.SetBool("Move",true);
@@ -42,6 +45,8 @@ namespace Game.Script
 
         public override void Exit()
         {
+            _enemyEventHandler.OnDestroyed -= OnDestroy;
+            _enemyEventHandler.OnAppliedDamage -= OnDamaged;
             _animator.SetBool("Move",false);
         }
 
@@ -53,7 +58,7 @@ namespace Game.Script
             }
             time -= Time.fixedDeltaTime;
             if (time <= 0) _switcher.Switch<EnemyIdleState>();
-            if (_enemyStats.isOnCliff) Rotate();
+            if (enemyInfo.isOnCliff) Rotate();
             _rigidbody2D.velocity = new Vector2(_walkSpeed * dir,_rigidbody2D.velocity.y);
         }
 
@@ -66,6 +71,15 @@ namespace Game.Script
         
         public override void Update()
         {
+        }
+        private void OnDamaged(int dmg)
+        {
+            _switcher.Switch<EnemyDamagedState>();
+        }
+        private void OnDestroy()
+        {
+            _enemyEventHandler.OnDestroyed -= OnDestroy;
+            _enemyEventHandler.OnAppliedDamage -= OnDamaged;
         }
     }
 }

@@ -8,14 +8,17 @@ namespace Game.Script
         private Rigidbody2D _rigidbody2D;
         private float _runSpeed;
         private Transform _enemyTransform;
-        private EnemyStats _enemyStats;
+        private EnemyInfo enemyInfo;
         private Animator _animator;
+
+        private EnemyEventHandler _enemyEventHandler;
         
         public EnemyChaseState(IStateSwitcher switcher,EnemyPlayerDetect playerDetect,Rigidbody2D rigidbody2D,float runSpeed,
-            Transform enemyTransform,EnemyStats enemyStats,Animator animator) : base(switcher)
+            Transform enemyTransform,EnemyInfo enemyInfo,Animator animator,EnemyEventHandler enemyEventHandler) : base(switcher)
         {
+            _enemyEventHandler = enemyEventHandler;
             _animator = animator;
-            _enemyStats = enemyStats;
+            this.enemyInfo = enemyInfo;
             _enemyTransform = enemyTransform;
             _runSpeed = runSpeed;
             _playerDetect = playerDetect;
@@ -24,11 +27,15 @@ namespace Game.Script
 
         public override void Enter()
         {
+            _enemyEventHandler.OnDestroyed += OnDestroy;
+            _enemyEventHandler.OnAppliedDamage += OnDamaged;
             _animator.SetBool("Move",true);
         }
 
         public override void Exit()
         {
+            _enemyEventHandler.OnDestroyed -= OnDestroy;
+            _enemyEventHandler.OnAppliedDamage -= OnDamaged;
             _animator.SetBool("Move",false);
         }
 
@@ -38,7 +45,7 @@ namespace Game.Script
             {
                 _switcher.Switch<EnemyIdleState>();
             }
-            if (_enemyStats.isOnCliff)
+            if (enemyInfo.isOnCliff)
             {
                 _switcher.Switch<EnemyIdleState>();
             }
@@ -74,6 +81,16 @@ namespace Game.Script
 
         public override void Update()
         {
+        }
+        private void OnDamaged(int dmg)
+        {
+            _switcher.Switch<EnemyDamagedState>();
+        }
+        
+        private void OnDestroy()
+        {
+            _enemyEventHandler.OnDestroyed -= OnDestroy;
+            _enemyEventHandler.OnAppliedDamage -= OnDamaged;
         }
     }
 }

@@ -3,13 +3,14 @@ using UnityEngine;
 
 namespace Game.Script
 {
-    public class EnemyStats : MonoBehaviour
+    public class EnemyInfo : MonoBehaviour
     {
         [SerializeField] private Transform _checkCliff;
         [SerializeField] private float _checkCliffDistance;
         [SerializeField] private Transform _checkGround;
         [SerializeField] private float _checkGroundRadius;
         [SerializeField] private LayerMask groundMask;
+        [SerializeField] 
 
         public bool isGround { private set; get; }
         public bool isOnCliff { private set; get; }

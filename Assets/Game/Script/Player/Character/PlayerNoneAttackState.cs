@@ -4,31 +4,33 @@ namespace Game.Script.Character
 {
     public class PlayerNoneAttackState : StateBase
     {
-        private PlayerStats _playerStats;
-        private PlayerEventHandler playerEventHandler;
+        private PlayerInfo _playerInfo;
+        private PlayerEventHandler _playerEventHandler;
         public PlayerNoneAttackState(IStateSwitcher switcher,PlayerEventHandler playerEventHandler,
-            PlayerStats playerStats) : base(switcher)
+            PlayerInfo playerInfo) : base(switcher)
         {
-            _playerStats = playerStats;
-            this.playerEventHandler = playerEventHandler;
+            _playerInfo = playerInfo;
+            _playerEventHandler = playerEventHandler;
         }
 
         private void Attack()
         {
-            if (_playerStats.isInvulnerable) return;
+            if (_playerInfo.isInvulnerable) return;
             _switcher.Switch<PlayerAttackState>();
         }
 
         public override void Enter()
         {
-            playerEventHandler.OnCharacterDestroyed += OnDestroy;
-            playerEventHandler.OnAttacked += Attack;
+            _playerEventHandler.OnDisabled += OnDisable;
+            _playerEventHandler.OnCharacterDestroyed += OnDestroy;
+            _playerEventHandler.OnAttacked += Attack;
         }
 
         public override void Exit()
         {
-            playerEventHandler.OnCharacterDestroyed -= OnDestroy;
-            playerEventHandler.OnAttacked -= Attack;
+            _playerEventHandler.OnDisabled -= OnDisable;
+            _playerEventHandler.OnCharacterDestroyed -= OnDestroy;
+            _playerEventHandler.OnAttacked -= Attack;
         }
 
         public override void FixedUpdate()
@@ -41,8 +43,15 @@ namespace Game.Script.Character
 
         private void OnDestroy()
         {
-            playerEventHandler.OnCharacterDestroyed -= OnDestroy;
-            playerEventHandler.OnAttacked -= Attack;
+            _playerEventHandler.OnCharacterDestroyed -= OnDestroy;
+            _playerEventHandler.OnAttacked -= Attack;
+        }
+
+        private void OnDisable()
+        {
+            _playerEventHandler.OnDisabled -= OnDisable;
+            _playerEventHandler.OnCharacterDestroyed -= OnDestroy;
+            _playerEventHandler.OnAttacked -= Attack;
         }
     }
 }

@@ -14,12 +14,12 @@ namespace Game.Script
         private Transform transform;
         private int _jumpForce;
         private PlayerEventHandler _playerEventHandler;
-        private PlayerStats _playerStats;
+        private PlayerInfo playerInfo;
         
         public PlayerMoveState(IStateSwitcher switcher,Joystick joystick,Rigidbody2D rigidbody2D,Animator animator,
-            int speed,Transform player,int jumpForce,PlayerEventHandler playerEventHandler,PlayerStats playerStats) : base(switcher)
+            int speed,Transform player,int jumpForce,PlayerEventHandler playerEventHandler,PlayerInfo playerInfo) : base(switcher)
         {
-            _playerStats = playerStats;
+            this.playerInfo = playerInfo;
             _playerEventHandler = playerEventHandler;
             _jumpForce = jumpForce;
             transform = player;
@@ -32,6 +32,7 @@ namespace Game.Script
 
         public override void Enter()
         {
+            _playerEventHandler.OnDisabled += OnDisable;
             _playerEventHandler.OnAttacked += Attack;
             _playerEventHandler.OnAppliedDamage += OnDamaged;
             _animator.SetBool("Move",true);
@@ -39,6 +40,7 @@ namespace Game.Script
 
         public override void Exit()
         {
+            _playerEventHandler.OnDisabled -= OnDisable;
             _playerEventHandler.OnAttacked -= Attack;
             _playerEventHandler.OnAppliedDamage -= OnDamaged;
             _animator.SetBool("Jump",false);
@@ -62,16 +64,16 @@ namespace Game.Script
 
         public override void Update()
         {
-            if (_playerStats.isGround && _joystick.Direction.normalized == Vector2.zero)
+            if (playerInfo.isGround && _joystick.Direction.normalized == Vector2.zero)
             {
                 _switcher.Switch<PlayerIdleState>();
             }
-            if (!_playerStats.isGround)
+            if (!playerInfo.isGround)
             {
                 _animator.SetBool("Jump", true);
                 _animator.SetBool("Move",false);
             }
-            if (_playerStats.isGround && _joystick.Direction.normalized != Vector2.zero)
+            if (playerInfo.isGround && _joystick.Direction.normalized != Vector2.zero)
             {
                 _animator.SetBool("Jump", false);
                 _animator.SetBool("Move",true);
@@ -80,7 +82,7 @@ namespace Game.Script
 
         private void Jump()
         {
-            if (_playerStats.isGround)
+            if (playerInfo.isGround)
             {
                 _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
             }
@@ -94,6 +96,13 @@ namespace Game.Script
         private void OnDamaged(int damage)
         {
             _switcher.Switch<PlayerDamagedState>();
+        }
+
+        private void OnDisable()
+        {
+            _playerEventHandler.OnAttacked -= Attack;
+            _playerEventHandler.OnAppliedDamage -= OnDamaged;
+            _playerEventHandler.OnDashed -= Jump;
         }
     }
 }

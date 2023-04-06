@@ -4,29 +4,30 @@ namespace Game.Script.Player.States
 {
     public class PlayerNoneMoveState : StateBase
     {
-        private PlayerEventHandler playerEventHandler;
-        private PlayerStats _playerStats;
+        private PlayerEventHandler _playerEventHandler;
+        private PlayerInfo _playerInfo;
         
-        public PlayerNoneMoveState(IStateSwitcher switcher,PlayerEventHandler playerEventHandler,PlayerStats playerStats) : base(switcher)
+        public PlayerNoneMoveState(IStateSwitcher switcher,PlayerEventHandler playerEventHandler,PlayerInfo playerInfo) : base(switcher)
         {
-            _playerStats = playerStats;
-            this.playerEventHandler = playerEventHandler;
-            this.playerEventHandler.OnDashed += Jump;
+            _playerInfo = playerInfo;
+            _playerEventHandler = playerEventHandler;
         }
 
         public override void Enter()
         {
-            playerEventHandler.OnAppliedDamage += OnDamaged;
+            _playerEventHandler.OnDashed += Jump;
+            _playerEventHandler.OnAppliedDamage += OnDamaged;
         }
 
         public override void Exit()
         {
-            playerEventHandler.OnAppliedDamage -= OnDamaged;
+            _playerEventHandler.OnDashed -= Jump;
+            _playerEventHandler.OnAppliedDamage -= OnDamaged;
         }
 
         public override void FixedUpdate()
         {
-            if (_playerStats.canMove)
+            if (_playerInfo.canMove)
             {
                 _switcher.Switch<PlayerIdleState>();
             }
@@ -44,6 +45,13 @@ namespace Game.Script.Player.States
         private void OnDamaged(int damage)
         {
             _switcher.Switch<PlayerDamagedState>();
+        }
+        
+        private void OnDisable()
+        {
+            _playerEventHandler.OnDisabled -= OnDisable;
+            _playerEventHandler.OnAppliedDamage -= OnDamaged;
+            _playerEventHandler.OnDashed -= Jump;
         }
     }
 }

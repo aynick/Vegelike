@@ -18,12 +18,19 @@ public abstract class CharacterBase : MonoBehaviour, IStateSwitcher
     protected PlayerEventHandler playerEventHandler;
     protected int moveSpeed;
     protected Joystick joystick;
-    protected PlayerStats playerStats;
+    protected PlayerInfo PlayerInfo;
+    public PlayerStats playerStats;
+    [SerializeField] protected PlayerStatsData playerStatsData;
 
 
     public virtual void GetDamage()
     {
         attackState.canAttack = true;
+    }
+
+    public virtual void Enable()
+    {
+        
     }
 
     public void Switch<T>() where T : StateBase

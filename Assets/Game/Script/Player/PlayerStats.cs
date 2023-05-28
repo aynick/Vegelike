@@ -12,6 +12,8 @@ namespace Game.Script
         public int jumpForce { private set; get; }
         public float playerStanTime { private set; get; }
         public float attackRate { private set; get; }
+        public float attackRadius { private set; get; }
+        public float comboRate { private set; get; }
         public int attackMaxCount { private set; get; }
         public int knockbackForce { private set; get; }
 
@@ -27,7 +29,9 @@ namespace Game.Script
             _playerEventHandler.OnDisabled += OnDisable;
             _playerEventHandler.OnCharacterDestroyed += OnDisable;
             damage = _playerStatsData.damage;
+            comboRate = _playerStatsData.comboRate;
             knockbackForce = _playerStatsData.knockbackForce;
+            attackRadius = _playerStatsData.attackRadius;
             attackMaxCount = _playerStatsData.attackMaxCount;
             attackRate = _playerStatsData.attackRate;
             moveSpeed = _playerStatsData.moveSpeed;

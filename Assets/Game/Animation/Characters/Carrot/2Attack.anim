@@ -20,9 +20,13 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 8927914684262846995, guid: 97d0e2aa25e11e24e9b1f5fbfe7bf014, type: 3}
+      value: {fileID: 1289662392681384502, guid: 006552f64755b9b4d9e3976159017073, type: 3}
     - time: 0.016666668
-      value: {fileID: 3391122563313795633, guid: 97d0e2aa25e11e24e9b1f5fbfe7bf014, type: 3}
+      value: {fileID: -2134320189422295277, guid: 006552f64755b9b4d9e3976159017073, type: 3}
+    - time: 0.033333335
+      value: {fileID: 8724296163648013694, guid: 006552f64755b9b4d9e3976159017073, type: 3}
+    - time: 0.05
+      value: {fileID: 5681949885930692551, guid: 006552f64755b9b4d9e3976159017073, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -42,14 +46,16 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 8927914684262846995, guid: 97d0e2aa25e11e24e9b1f5fbfe7bf014, type: 3}
-    - {fileID: 3391122563313795633, guid: 97d0e2aa25e11e24e9b1f5fbfe7bf014, type: 3}
+    - {fileID: 1289662392681384502, guid: 006552f64755b9b4d9e3976159017073, type: 3}
+    - {fileID: -2134320189422295277, guid: 006552f64755b9b4d9e3976159017073, type: 3}
+    - {fileID: 8724296163648013694, guid: 006552f64755b9b4d9e3976159017073, type: 3}
+    - {fileID: 5681949885930692551, guid: 006552f64755b9b4d9e3976159017073, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.033333335
+    m_StopTime: 0.06666667
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -69,8 +75,15 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0
+  - time: 0.033333335
     functionName: GetDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.033333335
+    functionName: PlayAttackSound
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

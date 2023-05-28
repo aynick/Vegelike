@@ -10,6 +10,7 @@ public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
 {
     private List<StateBase> allStates;
     private StateBase currentState;
+    private PlayerMoveState moveState;
 
     [SerializeField] public PlayerEventHandler playerEventHandler;
     [SerializeField] public Animator animator;
@@ -18,10 +19,10 @@ public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
     [SerializeField] private Transform playerBody;
     [SerializeField] public PlayerInfo playerInfo;
 
-    [SerializeField] public int maxHealthPoint;
-    public int healthPoint;
-    
+  
     public PlayerStats playerStats;
+
+    [SerializeField] private AudioSource stepSound;
 
     [SerializeField] private PlayerStatsData playerStatsData;
     
@@ -29,14 +30,12 @@ public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
     {
         InitVars();
         playerEventHandler.OnNewCharacterChanged += ChangeVars;
-        playerEventHandler.OnAppliedDamage += ApplyDamage;
         InitInput();
     }
 
     private void InitVars()
     {
-        healthPoint = maxHealthPoint;
-        playerEventHandler.OnHealthPointChange(healthPoint,maxHealthPoint);
+      
     }
 
     private void InitInput()
@@ -53,42 +52,32 @@ public class PlayerBehavior : MonoBehaviour ,IStateSwitcher
 
     private void InitStates()
     {
+        moveState = new PlayerMoveState(this, joystick, rigidbody2D, animator, playerStats.moveSpeed, playerBody,
+            playerStats.jumpForce,
+            playerEventHandler, playerInfo);
         allStates = new List<StateBase>()
         {
-            new PlayerMoveState(this,joystick,rigidbody2D,animator,playerStats.moveSpeed,playerBody,playerStats.jumpForce,
-                playerEventHandler,playerInfo),
+            moveState,
             new PlayerIdleState(this,playerEventHandler,animator,joystick,playerInfo,rigidbody2D),
             new PlayerNoneMoveState(this,playerEventHandler,playerInfo),
             new PlayerDamagedState(this,playerStats.playerStanTime,playerInfo,animator,rigidbody2D)
         };
-        if (currentState != null) currentState.Exit();
-        currentState = allStates[0];
-        currentState.Enter();
+        SetStateByDefault();
     }
 
     private void SetStateByDefault()
     {
         var state = allStates.FirstOrDefault(state => state is PlayerIdleState);
+        if (currentState != null) currentState.Exit();
         currentState = state;
         currentState.Enter();
     }
     
-    private void ApplyDamage(int damage)
-    {
-        if (healthPoint - damage <= 0)
-        {
-            healthPoint = 0;
-            Die();
-            playerEventHandler.OnHealthPointChange(healthPoint,maxHealthPoint);
-            return;
-        }
-        healthPoint -= damage;
-        playerEventHandler.OnHealthPointChange(healthPoint,maxHealthPoint);
-    }
+   
 
-    private void Die()
+    public void PlaySound(AudioSource audioSource)
     {
-        
+        audioSource.Play();
     }
     
     private void FixedUpdate()

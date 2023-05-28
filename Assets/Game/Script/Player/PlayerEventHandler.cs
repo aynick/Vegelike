@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Game.Script.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +10,7 @@ namespace Game.Script
     {
         public event Action OnDashed;
         public event Action OnAttacked;
+        public event Action OnSkillUsed;
         public event Action OnInteracted;
         public event Action<CharacterBase> OnNewCharacterChanged;
         public event Action OnCharacterChanged;
@@ -18,12 +21,16 @@ namespace Game.Script
         public event Action<int> OnAppliedDamage;
         public event Action<int,int> OnHealthPointChanged;
 
+        public event Action <int> OnRemovedItem;
+        public event Action <Item[]> OnRenderedSlots;
+
         public event Action OnDisabled;
 
         [SerializeField] private Button dashBtn;
         [SerializeField] private Button attackBtn;
         [SerializeField] private Button interactBtn;
         [SerializeField] private Button characterChangeBtn;
+        [SerializeField] private Button skillBtn;
         
         private void Start()
         {
@@ -32,6 +39,7 @@ namespace Game.Script
             attackBtn.onClick.AddListener(OnAttack);
             interactBtn.onClick.AddListener(OnInteract);
             characterChangeBtn.onClick.AddListener(OnCharacterChange);
+            skillBtn.onClick.AddListener(OnSkillUse);
         }
 
         private void OnDisable()
@@ -40,6 +48,22 @@ namespace Game.Script
             dashBtn.onClick.RemoveListener(OnDash);
             attackBtn.onClick.RemoveListener(OnAttack);
             interactBtn.onClick.RemoveListener(OnInteract);
+            skillBtn.onClick.RemoveListener(OnSkillUse);
+        }
+
+        public void OnRemoveItem(int index)
+        {
+            OnRemovedItem?.Invoke(index);
+        } 
+        
+        public void OnRenderSlots(Item[] items)
+        {
+            OnRenderedSlots?.Invoke(items);
+        }
+
+        private void OnSkillUse()
+        {
+            OnSkillUsed?.Invoke();
         }
 
         public void OnCharacterDestroy()
@@ -88,6 +112,7 @@ namespace Game.Script
             dashBtn = canvas._jumpBtn;
             attackBtn = canvas._attackBtn;
             interactBtn = canvas._interactBtn;
+            skillBtn = canvas._skillBtn;
         }
     }
 }

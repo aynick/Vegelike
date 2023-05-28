@@ -24,6 +24,7 @@ namespace Game.Script.Player.States
         {
             _playerEventHandler.OnDisabled += OnDisable;
             _playerEventHandler.OnAttacked += Attack;
+            _playerEventHandler.OnSkillUsed += Attack;
             _playerEventHandler.OnDashed += Jump;
             _playerEventHandler.OnAppliedDamage += OnDamaged;
             _animator.SetBool("Idle",true);
@@ -31,6 +32,7 @@ namespace Game.Script.Player.States
 
         public override void Exit()
         {
+            _playerEventHandler.OnSkillUsed -= Attack;
             _playerEventHandler.OnDisabled -= OnDisable;
             _playerEventHandler.OnAppliedDamage -= OnDamaged;
             _playerEventHandler.OnDashed -= Jump;

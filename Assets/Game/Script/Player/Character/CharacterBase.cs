@@ -6,6 +6,9 @@ using UnityEngine;
 
 public abstract class CharacterBase : MonoBehaviour, IStateSwitcher
 {
+    [SerializeField] protected PlayerSkillBase skillBase;
+    [SerializeField] protected AudioSource[] stepSounds;
+    [SerializeField] protected AudioSource[] attackSounds;
     protected PlayerAttackState attackState;
     protected List<StateBase> allStates;
     protected StateBase currentState;
@@ -13,7 +16,6 @@ public abstract class CharacterBase : MonoBehaviour, IStateSwitcher
     public Animator animator;
     protected Rigidbody2D rigidbody2D;
     [SerializeField] protected Transform attackPoint;
-    [SerializeField] protected float attackRadius; 
     [SerializeField] protected LayerMask attackLayer;
     protected PlayerEventHandler playerEventHandler;
     protected int moveSpeed;
@@ -28,6 +30,15 @@ public abstract class CharacterBase : MonoBehaviour, IStateSwitcher
         attackState.canAttack = true;
     }
 
+    public virtual void PlayStepSound(int index)
+    {
+        _playerBehavior.PlaySound(stepSounds[index]);
+    }
+    public virtual void PlayAttackSound(int index)
+    {
+        _playerBehavior.PlaySound(attackSounds[index]);
+    }
+
     public virtual void Enable()
     {
         
@@ -36,6 +47,7 @@ public abstract class CharacterBase : MonoBehaviour, IStateSwitcher
     public void Switch<T>() where T : StateBase
     {
         var state = allStates.FirstOrDefault(state => state is T);
+        if (state == null) return;
         currentState.Exit();
         currentState = state;
         currentState.Enter();

@@ -21,7 +21,7 @@ namespace Game.Script
         private PlayerInfo playerInfo;
         
         private float _comboTime;
-        private float _comboRate = 0.5f;
+        private float _comboRate;
         
         private float _moveSpeed;
 
@@ -33,8 +33,10 @@ namespace Game.Script
         public PlayerAttackState(IStateSwitcher switcher,int attackMaxCount,Animator animator,float attackRate,
             Rigidbody2D rigidbody2D,Transform attackPoint,float attackRadius,LayerMask enemyLayer,
             PlayerEventHandler playerEventHandler,float moveSpeed,Joystick joystick,
-            Transform playerTransform, PlayerInfo playerInfo,int damage,int knockbackForce) : base(switcher)
+            Transform playerTransform, PlayerInfo playerInfo,int damage,int knockbackForce,
+            float comboRate) : base(switcher)
         {
+            _comboRate = comboRate;
             _knockbackForce = knockbackForce;
             _damage = damage;
             this.playerInfo = playerInfo;
@@ -53,6 +55,7 @@ namespace Game.Script
 
         public override void Enter()
         {
+            _rigidbody2D.velocity = Vector2.zero;   
             _playerEventHandler.OnDisabled += OnDisable;
             _playerEventHandler.OnCharacterDestroyed += OnDisable;
             _playerEventHandler.OnAppliedDamage += OnDamaged;
@@ -76,7 +79,6 @@ namespace Game.Script
             if (_attackTime <= 0)
             {
                 _attackCount = 0;
-                _rigidbody2D.velocity = Vector2.zero;
                 playerInfo.canMove = true;
                 _switcher.Switch<PlayerNoneAttackState>();
             }

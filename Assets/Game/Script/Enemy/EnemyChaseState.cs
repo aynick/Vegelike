@@ -10,12 +10,14 @@ namespace Game.Script
         private Transform _enemyTransform;
         private EnemyInfo enemyInfo;
         private Animator _animator;
-
+        private float _attackDistance;
         private EnemyEventHandler _enemyEventHandler;
         
         public EnemyChaseState(IStateSwitcher switcher,EnemyPlayerDetect playerDetect,Rigidbody2D rigidbody2D,float runSpeed,
-            Transform enemyTransform,EnemyInfo enemyInfo,Animator animator,EnemyEventHandler enemyEventHandler) : base(switcher)
+            Transform enemyTransform,EnemyInfo enemyInfo,Animator animator,EnemyEventHandler enemyEventHandler,
+            float attackDistance) : base(switcher)
         {
+            _attackDistance = attackDistance;
             _enemyEventHandler = enemyEventHandler;
             _animator = animator;
             this.enemyInfo = enemyInfo;
@@ -34,6 +36,7 @@ namespace Game.Script
 
         public override void Exit()
         {
+            _rigidbody2D.velocity = Vector2.zero;
             _enemyEventHandler.OnDestroyed -= OnDestroy;
             _enemyEventHandler.OnAppliedDamage -= OnDamaged;
             _animator.SetBool("Move",false);
@@ -68,7 +71,7 @@ namespace Game.Script
 
             if (_playerDetect.closePlayer != null)
             {
-                if (Vector2.Distance(_playerDetect.closePlayer.transform.position, _enemyTransform.position) < 2)
+                if (Vector2.Distance(_playerDetect.closePlayer.transform.position, _enemyTransform.position) < _attackDistance)
                 {
                     _switcher.Switch<EnemyAttackState>();
                 }

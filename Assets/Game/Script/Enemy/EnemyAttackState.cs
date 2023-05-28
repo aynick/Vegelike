@@ -12,10 +12,13 @@ namespace Game.Script
         private float _attackRange;
         private Animator _animator;
         private Transform _enemyTransform;
+        private Rigidbody2D _rigidbody2D;
         
         public EnemyAttackState(IStateSwitcher switcher,EnemyPlayerDetect playerDetect,float attackRate,int damage,
-            float attackRange,Animator animator,Transform enemyTransform,EnemyEventHandler enemyEventHandler) : base(switcher)
+            float attackRange,Animator animator,Transform enemyTransform,EnemyEventHandler enemyEventHandler,
+            Rigidbody2D rigidbody2D) : base(switcher)
         {
+            _rigidbody2D = rigidbody2D;
             _enemyEventHandler = enemyEventHandler;
             _enemyTransform = enemyTransform;
             _animator = animator;
@@ -27,6 +30,7 @@ namespace Game.Script
 
         public override void Enter()
         {
+            _rigidbody2D.velocity = Vector2.zero;
             _enemyEventHandler.OnDestroyed += OnDestroy;
             _enemyEventHandler.OnAppliedDamage += OnDamaged;
             _attackTime = _attackRate;
@@ -47,15 +51,16 @@ namespace Game.Script
         {
             if (_playerDetect.closePlayer != null)
             {
+                _rigidbody2D.velocity = Vector2.zero;
                 _attackTime -= Time.deltaTime;
                 var distance = Vector2.Distance(_enemyTransform.position,
                     _playerDetect.closePlayer.transform.position);
-                if (_attackTime <= 0 && distance <= 2)
+                if (_attackTime <= 0 && distance <= _attackRange)
                 {
                     Attack();
                 }
 
-                if (distance > 2)
+                if (distance > _attackRange)
                 {
                     _switcher.Switch<EnemyChaseState>();
                 }

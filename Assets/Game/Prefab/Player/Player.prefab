@@ -97,8 +97,8 @@ MonoBehaviour:
   m_ScreenX: 0.5
   m_ScreenY: 0.5
   m_CameraDistance: 10
-  m_DeadZoneWidth: 0
-  m_DeadZoneHeight: 0
+  m_DeadZoneWidth: 0.25
+  m_DeadZoneHeight: 0.25
   m_DeadZoneDepth: 1
   m_UnlimitedSoftZone: 0
   m_SoftZoneWidth: 0.25
@@ -369,7 +369,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: 0
+  m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -400,6 +400,7 @@ GameObject:
   - component: {fileID: 2215423001680182606}
   - component: {fileID: 2215423001680182605}
   - component: {fileID: 6151361976657202906}
+  - component: {fileID: 516441030440217019}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -477,6 +478,7 @@ MonoBehaviour:
   attackBtn: {fileID: 0}
   interactBtn: {fileID: 0}
   characterChangeBtn: {fileID: 0}
+  skillBtn: {fileID: 0}
 --- !u!114 &2215423001680182607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,6 +499,9 @@ MonoBehaviour:
   canMove: 0
   isInvulnerable: 0
   isGround: 0
+  maxHealthPoint: 100
+  healthPoint: 0
+  playerEventHandler: {fileID: 2215423001680182578}
 --- !u!114 &2215423001680182606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -527,8 +532,7 @@ MonoBehaviour:
   rigidbody2D: {fileID: 2215423001680182580}
   playerBody: {fileID: 2215423001680182579}
   playerInfo: {fileID: 2215423001680182607}
-  maxHealthPoint: 0
-  healthPoint: 0
+  stepSound: {fileID: 0}
   playerStatsData: {fileID: 0}
 --- !u!114 &6151361976657202906
 MonoBehaviour:
@@ -544,3 +548,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerEventHandler: {fileID: 2215423001680182578}
   playerInfo: {fileID: 2215423001680182607}
+--- !u!114 &516441030440217019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2215423001680182582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1b75eeca6f49ad45bef6f6ff56d85ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: c6a01016f95fc92428cbf14bd44d14f4, type: 2}

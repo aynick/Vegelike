@@ -8,7 +8,6 @@ namespace Game.Script.Character
 {
     public class CarrotCharacter : CharacterBase
     {
-        
         private void Start()
         {
             Enable();
@@ -22,16 +21,15 @@ namespace Game.Script.Character
 
         private void InitStates()
         {
-            attackState = new PlayerAttackState(this,playerStats.attackMaxCount,animator,playerStats.attackRate,rigidbody2D,attackPoint,attackRadius,
-                attackLayer,playerEventHandler,moveSpeed,joystick,transform,PlayerInfo,playerStats.damage,playerStats.knockbackForce);
+            attackState = new PlayerAttackState(this,playerStats.attackMaxCount,animator,playerStats.attackRate,rigidbody2D,attackPoint,playerStats.attackRadius,
+                attackLayer,playerEventHandler,moveSpeed,joystick,transform,PlayerInfo,playerStats.damage,playerStats.knockbackForce,playerStats.comboRate);
             allStates = new List<StateBase>()
             {
+                new PlayerUseSkillState(this,skillBase,PlayerInfo),
                 new PlayerNoneAttackState(this,playerEventHandler,PlayerInfo),
                 attackState
             };
-            currentState = allStates[0];
-            currentState.Enter();
-            Debug.Log("states inited");
+            SetStateByDefault();
         }
         private void SetStateByDefault()
         {
@@ -49,7 +47,6 @@ namespace Game.Script.Character
             PlayerInfo = _playerBehavior.playerInfo;
             
             _playerBehavior.animator = animator;
-            Debug.Log(playerEventHandler.name);
             rigidbody2D = _playerBehavior.rigidbody2D;
             joystick = _playerBehavior.joystick;
             
@@ -69,7 +66,7 @@ namespace Game.Script.Character
 
         private void OnDrawGizmos()
         {
-            Gizmos.DrawWireSphere(attackPoint.position,attackRadius);
+            Gizmos.DrawWireSphere(attackPoint.position,playerStatsData.attackRadius);
         }
     }
 }

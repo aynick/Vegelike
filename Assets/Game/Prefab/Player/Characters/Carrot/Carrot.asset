@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c649947ed4854fb1b0a27d24a520b4d3, type: 3}
   m_Name: Carrot
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 10
   damage: 2
-  jumpForce: 12
-  playerStanTime: 0.7
-  attackMaxCount: 3
+  jumpForce: 16
+  playerStanTime: 1
+  attackMaxCount: 4
   knockbackForce: 5
-  attackRate: 0.7
+  attackRate: 0.5
+  attackRadius: 0.55
+  comboRate: 0.35

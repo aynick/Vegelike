@@ -34,12 +34,14 @@ namespace Game.Script
         {
             _playerEventHandler.OnDisabled += OnDisable;
             _playerEventHandler.OnAttacked += Attack;
+            _playerEventHandler.OnSkillUsed += Attack;
             _playerEventHandler.OnAppliedDamage += OnDamaged;
             _animator.SetBool("Move",true);
         }
 
         public override void Exit()
         {
+            _playerEventHandler.OnSkillUsed -= Attack;
             _playerEventHandler.OnDisabled -= OnDisable;
             _playerEventHandler.OnAttacked -= Attack;
             _playerEventHandler.OnAppliedDamage -= OnDamaged;
@@ -82,12 +84,12 @@ namespace Game.Script
 
         private void Jump()
         {
-            if (playerInfo.isGround)
+            if (playerInfo.isGround && !playerInfo.isInvulnerable)
             {
                 _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
             }
         }
-        
+
         private void Attack()
         {
             _switcher.Switch<PlayerNoneMoveState>();

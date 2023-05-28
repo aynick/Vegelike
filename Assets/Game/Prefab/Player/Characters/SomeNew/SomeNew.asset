@@ -19,3 +19,4 @@ MonoBehaviour:
   attackMaxCount: 2
   knockbackForce: 3
   attackRate: 0.7
+  attackRadius: 1

@@ -12,5 +12,7 @@ namespace Game.Script
         public int attackMaxCount;
         public int knockbackForce;
         public float attackRate;
+        public float attackRadius;
+        public float comboRate;
     }
 }
